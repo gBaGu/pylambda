@@ -18,3 +18,7 @@ functions:
           path: watering
           method: post
           cors: true
+  notify:
+    handler: handler.handleNotify
+    events:
+      - schedule: cron(30 08 * * ? *)

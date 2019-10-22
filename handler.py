@@ -110,13 +110,11 @@ def sendMessage(chatId, text):
     url = BASE_URL + '/sendMessage'
     requests.post(url, data)
 
-def handleStart(data):
+def handleStart(chatId):
     reply = 'Hi!'
-    chatId = data['message']['chat']['id']
     sendMessage(chatId, reply)
 
-def handleWater(data, schedule):
-    chatId = data['message']['chat']['id']
+def handleWater(chatId, schedule):
     today = datetime.date.today()
     plants = schedule.getPlantsToWater(today)
     if not plants:
@@ -127,9 +125,7 @@ def handleWater(data, schedule):
 	        reply += plant['Plant'] + '\n'
     sendMessage(chatId, reply)
 
-def handleAdd(data, schedule):
-    chatId = data['message']['chat']['id']
-    message = str(data['message']['text'])
+def handleAdd(chatId, message, schedule):
     commandArgs = message.split()
     if len(commandArgs) != 3:
         sendMessage(chatId, 'usage: /add <plant name> <interval in days>')
@@ -153,16 +149,24 @@ def handle(event, context):
     chatId = data['message']['chat']['id']
 
     if message.startswith('/start'):
-        handleStart(data)
+        handleStart(chatId)
     else:
         try:
             schedule = Schedule()
             if message.startswith('/water'):
-                handleWater(data, schedule)
+                handleWater(chatId, schedule)
             elif message.startswith('/add'):
-                handleAdd(data, schedule)
+                handleAdd(chatId, message, schedule)
         except Exception as e:
             print(e)
             sendMessage(chatId, str(e))
+
+    return {'statusCode': 200}
+
+
+def handleNotify(event, context):
+    chatId = 308999249
+    schedule = Schedule()
+    handleWater(chatId, schedule)
 
     return {'statusCode': 200}
