@@ -11,8 +11,8 @@ provider:
 
 
 functions:
-  post:
-    handler: handler.handle
+  update:
+    handler: handler.handleUpdate
     events:
       - http:
           path: watering

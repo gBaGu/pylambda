@@ -51,7 +51,7 @@ def handleAdd(chatId, message, schedule):
 
 
 
-def handle(event, context):
+def handleUpdate(event, context):
     assertKey(event, 'body')
     data = json.loads(event['body'])
 
