@@ -110,12 +110,12 @@ def sendMessage(chatId, text):
     url = BASE_URL + '/sendMessage'
     requests.post(url, data)
 
-def handle_start(data):
+def handleStart(data):
     reply = 'Hi!'
     chatId = data['message']['chat']['id']
     sendMessage(chatId, reply)
 
-def handle_water(data, schedule):
+def handleWater(data, schedule):
     chatId = data['message']['chat']['id']
     today = datetime.date.today()
     plants = schedule.getPlantsToWater(today)
@@ -127,7 +127,7 @@ def handle_water(data, schedule):
 	        reply += plant['Plant'] + '\n'
     sendMessage(chatId, reply)
 
-def handle_add(data, schedule):
+def handleAdd(data, schedule):
     chatId = data['message']['chat']['id']
     message = str(data['message']['text'])
     commandArgs = message.split()
@@ -153,14 +153,14 @@ def handle(event, context):
     chatId = data['message']['chat']['id']
 
     if message.startswith('/start'):
-        handle_start(data)
+        handleStart(data)
     else:
         try:
             schedule = Schedule()
             if message.startswith('/water'):
-                handle_water(data, schedule)
+                handleWater(data, schedule)
             elif message.startswith('/add'):
-                handle_add(data, schedule)
+                handleAdd(data, schedule)
         except Exception as e:
             print(e)
             sendMessage(chatId, str(e))
