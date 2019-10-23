@@ -2,14 +2,10 @@ import json
 import os
 import sys
 import datetime
-
-sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), './vendored'))
-
-import requests
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
+from botocore.vendored import requests
 
 from sheet import Schedule
+
 
 TOKEN = os.environ['TELEGRAM_TOKEN']
 BASE_URL = 'https://api.telegram.org/bot{}'.format(TOKEN)
