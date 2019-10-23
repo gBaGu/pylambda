@@ -21,4 +21,4 @@ functions:
   notify:
     handler: handler.handleNotify
     events:
-      - schedule: cron(30 08 * * ? *)
+      - schedule: cron(30 05 * * ? *)
