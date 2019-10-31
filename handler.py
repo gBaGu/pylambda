@@ -4,7 +4,7 @@ import sys
 import datetime
 from botocore.vendored import requests
 
-from sheet import Schedule
+from schedule import Schedule
 
 
 TOKEN = os.environ['TELEGRAM_TOKEN']
@@ -32,7 +32,7 @@ def handleWater(chatId, schedule):
     else:
 	    reply = 'Plants to water today:\n'
 	    for plant in plants:
-	        reply += plant['Plant'] + '\n'
+	        reply += plant.name + '\n'
     sendMessage(chatId, reply)
 
 def handleAdd(chatId, message, schedule):
