@@ -45,6 +45,16 @@ def add(chatId, message, schedule):
     schedule.addPlant(name, interval)
     sendMessage(chatId, 'Plant added!')
 
+def listAll(chatId, schedule):
+    plants = schedule.getAllPlants()
+    if not plants:
+        reply = 'No plants'
+    else:
+        reply = 'Plants (id: name - last_update - interval):\n'
+        for plant in plants:
+            reply += str(plant.id) + ': ' + plant.name + ' - ' + plant.lastEditDate.isoformat() + ' - ' + str(plant.wateringInterval) + '\n'
+    sendMessage(chatId, reply)
+
 
 
 def handleUpdate(event, context):
@@ -67,6 +77,8 @@ def handleUpdate(event, context):
                 water(chatId, schedule)
             elif message.startswith('/add'):
                 add(chatId, message, schedule)
+            elif message.startswith('/list'):
+                listAll(chatId, schedule)
         except Exception as e:
             print(e)
             sendMessage(chatId, str(e))
