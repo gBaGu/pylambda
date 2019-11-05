@@ -20,11 +20,11 @@ def sendMessage(chatId, text):
     url = BASE_URL + '/sendMessage'
     requests.post(url, data)
 
-def handleStart(chatId):
+def start(chatId):
     reply = 'Hi!'
     sendMessage(chatId, reply)
 
-def handleWater(chatId, schedule):
+def water(chatId, schedule):
     today = datetime.date.today()
     plants = schedule.getPlantsToWater(today)
     if not plants:
@@ -35,7 +35,7 @@ def handleWater(chatId, schedule):
 	        reply += plant.name + '\n'
     sendMessage(chatId, reply)
 
-def handleAdd(chatId, message, schedule):
+def add(chatId, message, schedule):
     commandArgs = message.split()
     if len(commandArgs) != 3:
         sendMessage(chatId, 'usage: /add <plant name> <interval in days>')
@@ -59,14 +59,14 @@ def handleUpdate(event, context):
     chatId = data['message']['chat']['id']
 
     if message.startswith('/start'):
-        handleStart(chatId)
+        start(chatId)
     else:
         try:
             schedule = Schedule()
             if message.startswith('/water'):
-                handleWater(chatId, schedule)
+                water(chatId, schedule)
             elif message.startswith('/add'):
-                handleAdd(chatId, message, schedule)
+                add(chatId, message, schedule)
         except Exception as e:
             print(e)
             sendMessage(chatId, str(e))
