@@ -15,10 +15,20 @@ def assertKey(obj, key):
     if key not in obj:
         raise ValueError('Object is missing field \'%s\'' % key)
 
-def sendMessage(chatId, text):
-    data = {'text': text.encode('utf8'), 'chat_id': chatId}
+def escapeTgMarkdown(text):
+    return text.replace("_", "\\_").replace("*", "\\*").replace("[", "\\[").replace("`", "\\`")
+
+def sendMessage(chatId, text, parseMode=None):
+    data = {
+        'text': text.encode('utf8'),
+        'chat_id': chatId
+    }
+    if parseMode:
+        data['parse_mode'] = parseMode
     url = BASE_URL + '/sendMessage'
-    requests.post(url, data)
+    result = requests.post(url, data)
+    #TODO: handle result
+
 
 def start(chatId):
     reply = 'Hi!'
@@ -45,6 +55,19 @@ def add(chatId, message, schedule):
     schedule.addPlant(name, interval)
     sendMessage(chatId, 'Plant added!')
 
+def listAll(chatId, schedule):
+    plants = schedule.getAllPlants()
+    if not plants:
+        reply = 'No plants'
+    else:
+        parseMode = 'Markdown'
+        reply = escapeTgMarkdown('Plants (id: name - next watering date - interval):\n')
+        reply += '```\n'
+        for plant in plants:
+            reply += escapeTgMarkdown(plant.toString() + '\n')
+        reply += '```'
+    sendMessage(chatId, reply, parseMode)
+
 
 
 def handleUpdate(event, context):
@@ -67,6 +90,8 @@ def handleUpdate(event, context):
                 water(chatId, schedule)
             elif message.startswith('/add'):
                 add(chatId, message, schedule)
+            elif message.startswith('/list'):
+                listAll(chatId, schedule)
         except Exception as e:
             print(e)
             sendMessage(chatId, str(e))
