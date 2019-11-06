@@ -77,6 +77,6 @@ def handleUpdate(event, context):
 def handleNotify(event, context):
     chatId = 308999249
     schedule = Schedule()
-    handleWater(chatId, schedule)
+    water(chatId, schedule)
 
     return {'statusCode': 200}
