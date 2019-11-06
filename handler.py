@@ -61,7 +61,7 @@ def listAll(chatId, schedule):
         reply = 'No plants'
     else:
         parseMode = 'Markdown'
-        reply = escapeTgMarkdown('Plants (id: name - last_update - interval):\n')
+        reply = escapeTgMarkdown('Plants (id: name - next watering date - interval):\n')
         reply += '```\n'
         for plant in plants:
             reply += escapeTgMarkdown(plant.toString() + '\n')
