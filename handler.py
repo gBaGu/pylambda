@@ -15,10 +15,20 @@ def assertKey(obj, key):
     if key not in obj:
         raise ValueError('Object is missing field \'%s\'' % key)
 
-def sendMessage(chatId, text):
-    data = {'text': text.encode('utf8'), 'chat_id': chatId}
+def escapeTgMarkdown(text):
+    return text.replace("_", "\\_").replace("*", "\\*").replace("[", "\\[").replace("`", "\\`")
+
+def sendMessage(chatId, text, parseMode=None):
+    data = {
+        'text': text.encode('utf8'),
+        'chat_id': chatId
+    }
+    if parseMode:
+        data['parse_mode'] = parseMode
     url = BASE_URL + '/sendMessage'
-    requests.post(url, data)
+    result = requests.post(url, data)
+    #TODO: handle result
+
 
 def start(chatId):
     reply = 'Hi!'
@@ -50,10 +60,13 @@ def listAll(chatId, schedule):
     if not plants:
         reply = 'No plants'
     else:
-        reply = 'Plants (id: name - last_update - interval):\n'
+        parseMode = 'Markdown'
+        reply = escapeTgMarkdown('Plants (id: name - last_update - interval):\n')
+        reply += '```\n'
         for plant in plants:
-            reply += str(plant.id) + ': ' + plant.name + ' - ' + plant.lastEditDate.isoformat() + ' - ' + str(plant.wateringInterval) + '\n'
-    sendMessage(chatId, reply)
+            reply += escapeTgMarkdown(plant.toString() + '\n')
+        reply += '```'
+    sendMessage(chatId, reply, parseMode)
 
 
 

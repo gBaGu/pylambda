@@ -7,3 +7,7 @@ class Plant:
 		self.name = name
 		self.lastEditDate = date
 		self.wateringInterval = interval
+
+	def toString(self):
+		pattern = '{: <2}: {: <20} - {: <10} - {: <3}'
+		return pattern.format(self.id, self.name, self.lastEditDate.isoformat(), self.wateringInterval)
