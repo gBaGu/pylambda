@@ -22,7 +22,7 @@ class Plant:
 		pattern = '{: <2}: {: <20} - {: <10} - {: <3}'
 		wateringDate = self.nextWateringDate()
 		wateringDateStr = wateringDate.isoformat()
-		deltaDays = (datetime.date.today() - wateringDate).days
+		deltaDays = (wateringDate - datetime.date.today()).days
 		if deltaDays == 0:
 			wateringDateStr = 'today'
 		elif deltaDays == 1:
