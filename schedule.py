@@ -42,13 +42,19 @@ class Schedule:
         ]
         return plants
 
+    def getPlantById(self, id):
+        row = self.sheet.getRow(Schedule.getRowIndexById(id))
+        if not row:
+            return None
+        return Plant(int(row[0]), row[1], datetime.datetime.strptime(row[2], '%Y-%m-%d').date(), int(row[3]))
+
     def getPlantsToWater(self, targetDate):
         result = []
         if not isinstance(targetDate, datetime.date):
             raise TypeError('targetDate must be a datetime.date')
         plants = self.getAllPlants()
         for plant in plants:
-            wateringDate = plant.lastEditDate
+            wateringDate = plant.countdownDate
             while wateringDate < targetDate:
                 wateringDate = wateringDate + datetime.timedelta(days=plant.wateringInterval)
             if wateringDate == targetDate:
@@ -57,9 +63,21 @@ class Schedule:
 
 
     def initColumns(self):
-        self.columnNames = ['N', 'Plant', 'Start', 'Interval(days)']
+        self.columnNames = ['N', 'Plant', 'Countdown date', 'Interval(days)']
         for i in range(len(self.columnNames)):
             self.sheet.setCell(1, i + 1, self.columnNames[i])
 
     def removePlantById(self, id):
         self.sheet.deleteRow(Schedule.getRowIndexById(id))
+
+    def setInterval(self, id, interval):
+        plant = self.getPlantById(id)
+        if plant == None:
+            raise IndexError('Plant with id={} is missing!'.format(id))
+
+        newDate = plant.nextWateringDate()
+        if newDate > datetime.date.today():
+            newDate -= datetime.timedelta(days=plant.wateringInterval)
+        rowNum = Schedule.getRowIndexById(id)
+        self.sheet.setCell(rowNum, 3, newDate.isoformat())
+        self.sheet.setCell(rowNum, 4, interval)
