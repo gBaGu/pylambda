@@ -42,6 +42,12 @@ class Schedule:
         ]
         return plants
 
+    def getPlantById(self, id):
+        row = self.sheet.getRow(Schedule.getRowIndexById(id))
+        if not row:
+            return None
+        return Plant(int(row[0]), row[1], datetime.datetime.strptime(row[2], '%Y-%m-%d').date(), int(row[3]))
+
     def getPlantsToWater(self, targetDate):
         result = []
         if not isinstance(targetDate, datetime.date):
@@ -63,3 +69,13 @@ class Schedule:
 
     def removePlantById(self, id):
         self.sheet.deleteRow(Schedule.getRowIndexById(id))
+
+    def setInterval(self, id, interval):
+        plant = self.getPlantById(id)
+        if plant == None:
+            raise IndexError('Plant with id={} is missing!'.format(id))
+
+        today = datetime.date.today()
+        rowNum = Schedule.getRowIndexById(id)
+        self.sheet.setCell(rowNum, 3, today.isoformat())
+        self.sheet.setCell(rowNum, 4, interval)

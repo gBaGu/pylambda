@@ -68,6 +68,19 @@ def listAll(chatId, schedule):
         reply += '```'
     sendMessage(chatId, reply, parseMode)
 
+def setInterval(chatId, message, schedule):
+    commandArgs = message.split()
+    if len(commandArgs) != 3:
+        sendMessage(chatId, 'usage: /set_interval <plant id> <interval in days>')
+        return
+    id = int(commandArgs[1])
+    interval = int(commandArgs[2])
+    try:
+        schedule.setInterval(id, interval)
+        sendMessage(chatId, 'Interval is set')
+    except IndexError as e:
+        sendMessage(chatId, str(e))
+
 
 
 def handleUpdate(event, context):
@@ -92,6 +105,8 @@ def handleUpdate(event, context):
                 add(chatId, message, schedule)
             elif message.startswith('/list'):
                 listAll(chatId, schedule)
+            elif message.startswith('/set_interval'):
+                setInterval(chatId, message, schedule)
         except Exception as e:
             print(e)
             sendMessage(chatId, str(e))
