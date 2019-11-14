@@ -75,7 +75,9 @@ class Schedule:
         if plant == None:
             raise IndexError('Plant with id={} is missing!'.format(id))
 
-        today = datetime.date.today()
+        newDate = plant.nextWateringDate()
+        if newDate > datetime.date.today():
+            newDate -= datetime.timedelta(days=plant.wateringInterval)
         rowNum = Schedule.getRowIndexById(id)
-        self.sheet.setCell(rowNum, 3, today.isoformat())
+        self.sheet.setCell(rowNum, 3, newDate.isoformat())
         self.sheet.setCell(rowNum, 4, interval)
