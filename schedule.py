@@ -54,7 +54,7 @@ class Schedule:
             raise TypeError('targetDate must be a datetime.date')
         plants = self.getAllPlants()
         for plant in plants:
-            wateringDate = plant.lastEditDate
+            wateringDate = plant.countdownDate
             while wateringDate < targetDate:
                 wateringDate = wateringDate + datetime.timedelta(days=plant.wateringInterval)
             if wateringDate == targetDate:
@@ -63,7 +63,7 @@ class Schedule:
 
 
     def initColumns(self):
-        self.columnNames = ['N', 'Plant', 'Start', 'Interval(days)']
+        self.columnNames = ['N', 'Plant', 'Countdown date', 'Interval(days)']
         for i in range(len(self.columnNames)):
             self.sheet.setCell(1, i + 1, self.columnNames[i])
 

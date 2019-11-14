@@ -2,17 +2,17 @@ import datetime
 
 
 class Plant:
-	__slots__ = ['id', 'name', 'lastEditDate', 'wateringInterval']
+	__slots__ = ['id', 'name', 'countdownDate', 'wateringInterval']
 
 	def __init__(self, id, name, date, interval):
 		self.id = id
 		self.name = name
-		self.lastEditDate = date
+		self.countdownDate = date
 		self.wateringInterval = interval
 
 	def nextWateringDate(self):
 		today = datetime.date.today()
-		deltaDays = (today - self.lastEditDate).days
+		deltaDays = (today - self.countdownDate).days
 		daysToWater = self.wateringInterval - deltaDays % self.wateringInterval
 		if daysToWater == self.wateringInterval:
 			return today
