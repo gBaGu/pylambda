@@ -68,7 +68,17 @@ class Schedule:
             self.sheet.setCell(1, i + 1, self.columnNames[i])
 
     def removePlantById(self, id):
-        self.sheet.deleteRow(Schedule.getRowIndexById(id))
+    	plants = self.getAllPlants()
+    	lastId = len(plants)
+    	rowToDelete = Schedule.getRowIndexById(id)
+    	if id < 1 or id > lastId:
+    		raise IndexError('Plant with id={} is missing!'.format(id))
+
+    	if id != lastId:
+        	self.sheet.setCell(rowToDelete, 2, plants[lastId - 1].name)
+    		self.sheet.setCell(rowToDelete, 3, plants[lastId - 1].countdownDate.isoformat())
+        	self.sheet.setCell(rowToDelete, 4, plants[lastId - 1].wateringInterval)
+        self.sheet.deleteRow(Schedule.getRowIndexById(lastId))
 
     def setInterval(self, id, interval):
         plant = self.getPlantById(id)

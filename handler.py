@@ -55,6 +55,16 @@ def add(chatId, message, schedule):
     schedule.addPlant(name, interval)
     sendMessage(chatId, 'Plant added!')
 
+def remove(chatId, message, schedule):
+	commandArgs = message.split()
+    if len(commandArgs) != 2:
+        sendMessage(chatId, 'usage: /remove <plant id>')
+        return
+    id = int(commandArgs[1])
+    schedule.removePlantById(id)
+    sendMessage(chatId, 'Plant with id={} has been removed!'.format(id))
+
+
 def listAll(chatId, schedule):
     plants = schedule.getAllPlants()
     if not plants:
@@ -103,6 +113,8 @@ def handleUpdate(event, context):
                 water(chatId, schedule)
             elif message.startswith('/add'):
                 add(chatId, message, schedule)
+            elif message.startswith('/remove'):
+                remove(chatId, message, schedule)
             elif message.startswith('/list'):
                 listAll(chatId, schedule)
             elif message.startswith('/set_interval'):
