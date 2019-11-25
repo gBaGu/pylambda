@@ -56,7 +56,7 @@ def add(chatId, message, schedule):
     sendMessage(chatId, 'Plant added!')
 
 def remove(chatId, message, schedule):
-	commandArgs = message.split()
+    commandArgs = message.split()
     if len(commandArgs) != 2:
         sendMessage(chatId, 'usage: /remove <plant id>')
         return
