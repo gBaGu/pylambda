@@ -19,8 +19,8 @@ class GoogleSheet:
     def getAllRecords(self):
         return self.sheet.get_all_records()
 
-    def getCell(self, x, y):
-        return self.sheet.cell(1, 1).value
+    def getCell(self, row, col):
+        return self.sheet.cell(row, col).value
 
     def getColumn(self, index):
         return self.sheet.col_values(index)
@@ -31,5 +31,5 @@ class GoogleSheet:
     def insertRow(self, index, values):
         self.sheet.insert_row(values, index)
 
-    def setCell(self, x, y, value):
-        return self.sheet.update_cell(x, y, value)
+    def setCell(self, row, col, value):
+        return self.sheet.update_cell(row, col, value)
