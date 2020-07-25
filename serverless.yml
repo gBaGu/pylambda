@@ -1,0 +1,25 @@
+service: my-telegram-bot
+
+provider:
+  name: aws
+  runtime: python3.6
+  stage: dev
+  region: us-east-1
+  environment:
+    TELEGRAM_TOKEN: ${env:TELEGRAM_TOKEN}
+    GOOGLE_SECRET: ${env:GOOGLE_SECRET}
+
+
+
+functions:
+  update:
+    handler: handler.handleUpdate
+    events:
+      - http:
+          path: watering
+          method: post
+          cors: true
+  notify:
+    handler: handler.handleNotify
+    events:
+      - schedule: cron(30 05 * * ? *)
